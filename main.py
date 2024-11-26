@@ -1,62 +1,33 @@
-import random
+data_structure = [
+    [1, 2, 3],
+    {'a': 4, 'b': 5},
+    (6, {'cube': 7, 'drum': 8}),
+    "Hello", ((), [{(2, 'Urban', ('Urban2', 35))}])
+]
 
-def get_cipher():
-    num = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    numbers = list(range(3, 21))
-    cipher = random.choice(numbers)
-    return cipher
-
-def get_passcode(n):
-    passdict = {}  # создаём словарь с кодами и паролями
-    passdict.update({3: 12, 4: 13, 5: 1423, 6: 121524, 7: 162534, 8: 13172635, 9: 1218273645})
-    passdict.update({10: 141923283746, 11: 11029384756, 12: 12131511124210394857, 13: 112211310495867})
-    passdict.update({14: 1611325212343114105968, 15: 1214114232133124115106978})
-    passdict.update({16: 1317115262143531341251161079, 17: 11621531441351261171089})
-    passdict.update({18: 12151811724272163631545414513612711810, 19: 118217316415514613712811910})
-    passdict.update({20: 13141911923282183731746416515614713812911})
-    passcode = passdict.get(n)
-    return passcode
-
-n = get_cipher()
-print('Шифр   :', n)
-
-pairnum1 = list(range(1, n))
-pairnum2 = list(range(1, n))
-pairs = []
-result = ''
-
-for i in pairnum1:
-    for j in pairnum2:
-        pn1 = i
-        pn2 = j
-        if pn1 >= pn2:
-            continue
-        else:
-            kratno = n % (pn1 + pn2)
-            if kratno == 0:
-                pairs.append([pn1, pn2])
-                result = result + str(pn1) + str(pn2)
-print('Пары чисел', *pairs)
-print('Введите пароль', result, 'во вторую вставку')
-if int(result) == get_passcode(n):
-    print('Путь свободен!')
+def calculate_structure_sum(data_structure):
+    sum_numbers = 0
+    sum_strings = 0
 
 
+    def recurse(data):
+        nonlocal sum_numbers, sum_strings
+        if isinstance(data, list) or isinstance(data, tuple) or isinstance(data, set):
+            for item in data:
+                recurse(item)
+        elif isinstance(data, dict):
+            for value in data.values():
+                recurse(value)
+            for key in data.keys():
+                recurse(key)
+        elif isinstance(data, int) or isinstance(data, str):
+            if isinstance(data, int):
+                sum_numbers += data
+            elif isinstance(data, str):
+                sum_strings += len(data)
 
+    recurse(data_structure)
+    return sum_numbers + sum_strings
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+result = calculate_structure_sum(data_structure)
+print(result)
